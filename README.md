@@ -8,7 +8,7 @@
   2.Download & Install XAMPP or another PHP runner<br>
   3.Click start.bat<br>
   <br>
-  For Manual
+  For Manual  <br>
   1.git clone https://github.com/officialfeeder/Web-To-IP<br>
   2.Download & Install XAMPP or another PHP runner<br>
   3.php webtoip.php
