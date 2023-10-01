@@ -1,30 +1,29 @@
-<?php
-// Menerima input nama file dan nama file output melalui CLI
-$inputFile = readline('List : ');
-$outputFile = readline('Save Result : ');
+import socket
 
-// Membaca konten file input sebagai array berdasarkan baris
-$websites = file($inputFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+def get_ip_address(domain):
+    # Menghapus karakter "https://", "http://", dan "www."
+    domain = domain.replace("https://", "").replace("http://", "").replace("www.", "").replace("/", "")
+    
+    try:
+        ip_address = socket.gethostbyname(domain)
+        return ip_address
+    except socket.gaierror:
+        return None  # Mengembalikan None jika alamat IP tidak ditemukan
 
-// Array untuk menyimpan hasil IP
-$results = array();
-
-// Looping melalui setiap alamat website dan memeriksa IP-nya
-foreach ($websites as $line => $website) {
-    // Memeriksa apakah website tidak kosong
-    if (!empty($website)) {
-        $ip = gethostbyname($website);
-        $results[] = "$ip";
-        echo "[ $line ]: IP dari $website adalah: $ip" . PHP_EOL;
-    } else {
-        $results[] = "[ $line ] : Website tidak valid atau tidak ditemukan.";
-        echo "[ $line ] : Website tidak valid atau tidak ditemukan." . PHP_EOL;
-    }
-}
-
-// Menyimpan hasil IP ke file baru dengan nama yang ditentukan melalui CLI
-$outputContent = implode(PHP_EOL, $results);
-file_put_contents($outputFile, $outputContent);
-
-echo "Pengecekan selesai. Hasil IP disimpan di $outputFile" . PHP_EOL;
-?>
+if __name__ == "__main__":
+    input_file_name = "site.txt"  # Nama file yang berisi daftar domain
+    output_file_name = "ip.txt"  # Nama file untuk menyimpan alamat IP
+    
+    try:
+        with open(input_file_name, "r") as input_file, open(output_file_name, "w") as output_file:
+            domains = input_file.readlines()
+            for domain in domains:
+                domain = domain.strip()  # Menghapus karakter newline
+                ip = get_ip_address(domain)
+                if ip is not None:
+                    output_file.write(f"{ip}\n")
+                    print(f"Alamat IP untuk {domain} adalah: {ip}")
+        
+        print(f"Hasil telah disimpan dalam file {output_file_name}.")
+    except FileNotFoundError:
+        print(f"File {input_file_name} tidak ditemukan.")
